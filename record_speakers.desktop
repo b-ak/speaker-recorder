@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Record Speakers
+Comment=Record your speakers
+Exec=python /usr/local/bin/record-speakers/record_speakers.py
+Path=/usr/local/bin/record-speakers/
+Icon=/usr/local/bin/record-speakers/record-spreakers.svg
+Terminal=false
+Type=Application
+Categories=Utility;Application;
