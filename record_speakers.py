@@ -22,13 +22,13 @@ class Record:
         self.window.show()
 
     def on_Record_Speakers_destroy(self, object, data=None):
-        print "Quit with Cancel"
+        print ("Quit with Cancel")
         Gtk.main_quit()
 
     def on_switch1_notify(self, switch, gparam):
         music_path = os.environ["HOME"]
         music_path = music_path + "/Music"
-        print music_path
+        print (music_path)
         if switch.get_active():
             self.label1.set_text("Recording Started")
 
@@ -40,26 +40,28 @@ class Record:
             mp3file = music_path + "/" + mp3file
             # Update the file save path
             self.label2.set_text("File saved at: %s" % mp3file)
-            print "Saving file to " + mp3file
+            print ("Saving file to " + mp3file)
             # Form the command to record from the speakers
             # Find Pulse Audio's monitor stream
             cmd_find_dev = "pacmd list-sources | grep -e 'stereo.monitor' | awk '{print $2}' | sed 's/[<>]//g'"
-            p = subprocess.Popen(cmd_find_dev, stdout=subprocess.PIPE, shell=True)
-            (output, err) = p.communicate()
+            p = subprocess.Popen(cmd_find_dev, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+            (output, err) = p.communicate(timeout=6000) #timeout parameter is introduced in python 3
+            encoding = 'utf-8'
+            output = str(output,encoding)
             alsa_stream = output.strip('\n')
-            print "Alsa Monitor stream found at %s" % alsa_stream
+            print ("Alsa Monitor stream found at %s" % alsa_stream)
             # Escape any special characters
             mp3file = re.escape(mp3file)
-            print "Escaping special characters %s" % mp3file
+            print ("Escaping special characters %s" % mp3file)
             cmd_rec = "parec -d "
             cmd_lame = " | lame -r -V0 - " + mp3file + " &"
             cmd_rec = cmd_rec + alsa_stream + cmd_lame
-            print "Recording...\n %s" % cmd_rec
+            print ("Recording...\n %s" % cmd_rec)
             # Start recording
             os.system(cmd_rec)
 
         else:
-            print "Stop"
+            print ("Stop")
             self.label1.set_text("Recording Stopped")
             subprocess.call(["pkill", "parec"])
 
