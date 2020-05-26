@@ -45,7 +45,7 @@ class Record:
             # Find Pulse Audio's monitor stream
             cmd_find_dev = "pacmd list-sources | grep -e 'stereo.monitor' | awk '{print $2}' | sed 's/[<>]//g'"
             p = subprocess.Popen(cmd_find_dev, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-            (output, err) = p.communicate(timeout=100) #timeout parameter is introduced in python 3
+            (output, err) = p.communicate(timeout=6000) #timeout parameter is introduced in python 3
             encoding = 'utf-8'
             output = str(output,encoding)
             alsa_stream = output.strip('\n')
